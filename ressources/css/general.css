@@ -1,0 +1,239 @@
+/* DOCUMENT INFORMATION
+    Name: Fake Magazines
+    Version: 1.0.0
+    Author: Alexis Choloux
+    Date: 05/11/20
+
+FONTS
+    h1= 'Playfair Display', serif;
+    h2 - h6=(bold) 'PT Sans', sans-serif;
+    p= 'PT Sans', sans-serif;
+
+COLORS
+    -Primary= #D9BF3D
+    -Secondary= #818C83
+    -Tertiary= #D9A441
+    -Special= #bf3434
+
+CSS/HTML DIRECTORY
+    1. GENERAL
+    2. HEADER
+    3. PART ONE
+      -media queries
+    4. PART TWO
+    5. PANIER
+    6. CONFIRMATION
+    7. DETAILS PRODUIS
+    8. FOOTER
+===================*/
+
+/* GENERAL
+================== */
+h1 {
+    font-family: 'Playfair Display', serif;
+} 
+h2, h3, h4, h5, h6 {
+    font-family: 'PT Sans', sans-serif;
+}
+p {
+    font-family: 'PT Sans', sans-serif;
+} 
+
+input {
+    padding-bottom: 5px;
+    border-radius: 5px;
+}
+
+.inputOne {
+    background-color: #bf3434;
+    border: solid #bf3434 1px;
+    border-radius: 20px;
+    color: white;
+}
+.inputOne:hover {
+    background-color: white;
+    color: #bf3434;
+    border: solid #bf3434 1px;
+    transition: 1s;
+}
+
+.inputTwo {
+    margin: 5px 0 50px 0;
+    background-color: #D9BF3D;
+    border: solid #D9BF3D 1px;
+    border-radius: 20px;
+    color: white;
+}
+.inputTwo:hover {
+    background-color: white;
+    border: solid white 1px;
+    color: #818C83;
+    font-weight: bold;
+    transition: 1s;
+}
+
+.orderBtn {
+    padding-bottom: 5px;
+    margin-right: 15px;
+    border: none;
+    background-color: #d63939;
+    color: white;
+    border-radius: 10px;
+}
+.orderBtn:hover {
+    scale: 1.2;
+    transition: 1s;
+}
+
+.emptyBtn {
+    background-color: #818C83;
+    border: none;
+    border-radius: 20px;
+    color: white;
+}
+.emptyBtn:hover {
+    background-color: white;
+    color: #616963;
+    transition: 1s;
+}
+
+#qteShowCart {
+    font-size : 15px
+}
+
+#priceShowCart {
+    border: 1px grey solid;
+    margin: 10px 0 10px 0;
+}
+
+#panier .displayConfirm {
+    display: none;
+}
+
+#confirm .displayShowCart {
+    display: none;
+}
+
+
+/* PART ONE
+================== */
+#partOne {
+    height: 550px;
+    background-image: url(../images/fake-magazines-main.jpg);
+    background-size: cover;
+    color: white;
+}
+
+#partOne h1 {
+    margin-top: 250px;
+    font-size: 27px;
+    color: white;
+}
+
+#partOne h2 {
+    margin-top: 60px;
+    font-size: 25px;
+    color: rgba(255, 255, 255, 0.904);
+}
+
+/* media queries */
+@media screen and (max-width:400px) {
+    #partOne h1 {
+        font-size: 40px;
+    }
+}
+@media screen and (max-width:700px) {
+    #partOne p {
+        width: 90vw;
+    }
+}
+
+/* PART TWO
+============================ */
+#select {
+    background-color: rgba(0, 0, 0, 0.411);
+    margin: 50px 0 50px 0;
+    font-size: 18px;
+    color: white;
+}
+
+
+/* PANIER
+============================= */
+#total {
+    margin-top: -35px;
+    font-size: 40px;
+}
+
+/* mediaquerries */
+@media screen and (min-width: 1200px) {
+    #smartphoneBtn {
+        display: none;
+    }
+}
+
+
+/* CONFIRMATION
+=========================== */
+#returnBtn {
+    position: fixed;
+    z-index: 1000;
+    margin: 70px 0 0 300px;
+}
+
+#confirm .col-xl-2 img {
+    height: 200px;
+}
+
+#confirm .inputOne {
+    font-size: 13px;
+}
+
+#confirm .inputTwo {
+    font-size: 13px;
+}
+
+#confirmBtn {
+    margin-bottom: 10px;
+}
+
+#return {
+    color: white;
+}
+
+#confirm {
+    margin-bottom: 50px;
+    border-bottom: solid grey 1px;
+}
+
+#confirm .total {
+    font-size: 25px;
+}
+
+/* media querries */
+@media screen and (max-width: 1199px) {
+    #returnBtn {
+        margin: 5px 0 0 10px;
+    }
+    #confirm h1 {
+        margin-top: 50px;
+    }
+}
+
+
+/* DETAILS PRODUITS
+============================ */
+#detail {
+    margin-bottom: 50px;
+}
+
+
+
+/* FOOTER
+===================== */
+footer {
+    background-color: black;
+    color: white;
+    padding: 10px 0 20px 0;
+    margin: 0;
+}
