@@ -7,12 +7,10 @@ if (!isset($_SESSION['panier'])) {
   $_SESSION['panier'] = array();
 }
 
-$listeArticles = getArticle();
-
 if (isset($_POST['idChoosingArticle'])) {
   $id = $_POST['idChoosingArticle'];
-  $article = getArticleFromId($listeArticles, $id);
-  ajoutPanier($article, $id);
+  $chosenArticle = getArticleFromId($id);
+  ajoutPanier($chosenArticle, $id);
 }
 
 if (isset($_POST['emptyCart'])) {
@@ -85,7 +83,7 @@ if (isset($_POST['emptyCart'])) {
         <div class="row">
 
           <?php
-          showArticles($listeArticles);
+          showArticles(getArticles());
           ?>
 
         </div>

@@ -6,14 +6,6 @@ if (isset($_POST['modifiedArticleId'])) {
     changeQuantity();
 }
 
-$listeArticles = getArticle();
-
-if (isset($_POST['idChoosingArticle'])) {
-    $id = $_POST['idChoosingArticle'];
-    $article = getArticleFromId($listeArticles, $id);
-    ajoutPanier($article, $id);
-}
-
 if (isset($_POST['deleteArticleId'])) {
     deleteArticle($_POST['deleteArticleId']);
 }

@@ -8,8 +8,6 @@ if (!isset($_SESSION['panier'])) {
 
 if (isset($_POST['detailsProductId'])) {
     $id = $_POST['detailsProductId'];
-    $listeArticles = getArticle();
-    $article = getArticleFromId($listeArticles, $id);
 }
 
 ?>
@@ -61,7 +59,7 @@ if (isset($_POST['detailsProductId'])) {
 
             <div class="row" id="detail">
                 <?php
-                showArticle($article);
+                showArticle(getArticleFromId($id));
                 ?>
             </div>
 
