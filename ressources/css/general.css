@@ -21,10 +21,12 @@ CSS/HTML DIRECTORY
     3. PART ONE
       -media queries
     4. PART TWO
-    5. PANIER
-    6. CONFIRMATION
-    7. DETAILS PRODUIS
-    8. FOOTER
+    5. CATEGORIES
+    6. PANIER
+    7. CONFIRMATION
+    8. DETAILS PRODUIS
+    9. FOOTER
+    10. CONNEXION / INSCRIPTION
 ===================*/
 
 /* GENERAL
@@ -158,6 +160,44 @@ input {
 }
 
 
+/* CATEGORIES
+============================ */
+#ranges h1 {
+    color: #D9A441;
+}
+
+#rangesContent {
+    background-color: #D9A441;
+    border-radius: 20px;
+}
+
+#rangesContent .col-md-4 img {
+    height: 250px;
+    box-shadow: 5px 5px 5px #9c6c12;
+}
+
+#rangesContent h3 {
+    font-size: 20px;
+}
+
+#rangesContent .inputOne:hover {
+    background-color: #D9A441;
+    color: white;
+    border: solid white 1px;
+}
+
+#rangesContent .inputTwo {
+    background-color: #D9BF3D;
+    border: solid #D9BF3D 1px;
+    border-radius: 20px;
+    color: white;
+}
+#rangesContent .inputTwo:hover {
+    background-color:#D9A441;
+    border: solid #D9A441 1px;
+}
+
+
 /* PANIER
 ============================= */
 #total {
@@ -236,4 +276,18 @@ footer {
     color: white;
     padding: 10px 0 20px 0;
     margin: 0;
+}
+
+
+/* CONNEXION / INSCRPTION
+============================ */
+#logInForm {
+    margin: 10px auto 50px auto;
+    padding: 20px 10px 20px 10px;
+    border: solid 1px black;
+    border-radius: 20px;
+}
+
+#logInForm button {
+    width: 80%;
 }

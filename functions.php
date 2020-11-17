@@ -1,5 +1,6 @@
 <?php
 
+// GENERAL ====================================================================================
 // connection to DB
 function getConnection()
 {
@@ -11,7 +12,6 @@ function getConnection()
     return $db;
 }
 
-
 // get articles
 function getArticles()
 {
@@ -20,26 +20,62 @@ function getArticles()
     return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
+// TOOLS ====================================================================================
+// article from id
+function getArticleFromId($id)
+{
+    $db = getConnection();
+    $query = $db->prepare('SELECT * FROM articles WHERE id = ?');
+    $query->execute(array($id));
+    return $query->fetch();
+}
+
+// ajouter au panier
+function checkCart($id)
+{
+    foreach ($_SESSION['panier'] as $article) {
+        if ($article['id'] == $id) {
+            return true;
+        }
+    }
+    return false;
+}
+function ajoutPanier($article, $id)
+{
+    $isArticleAdded = checkCart($id);
+    if ($isArticleAdded == true) {
+        echo "<script> alert(\"Article déjà présent dans le panier !\")</script>";
+    } else {
+        $article['quantity'] = 1;
+        array_push($_SESSION['panier'], $article);
+    }
+}
+
+
+// INDEX ==================================================================================
 // liste des articles
 function showArticles($articles)
 {
     foreach ($articles as $article) {
-            echo "<div class=\"col-xl-4 text-center\">";
-            echo "<form action=\"index.php\" method=\"post\">";
-            echo "<img src=\"ressources/images/" . $article["image"] . "\">";
-            echo "<h2>" . $article["nom"] . "</h2>";
-            echo "<p>" . sprintf('%.2f', $article["prix"]) . " €</p>";
-            echo "<input type=\"submit\" class=\"inputOne\" name=\"ajouterPanier\" value=\"Ajouter au panier\">";
-            echo "<input type=\"hidden\" name=\"idChoosingArticle\" value=\"" . $article["id"] . "\">";
-            echo "</form>";
-            echo "<form action=\"details-produits.php\" method=\"post\">";
-            echo "<input type=\"submit\" class=\"inputTwo\" value=\"Plus de détails\">";
-            echo "<input type=\"hidden\" name=\"detailsProductId\" value=\"" . $article["id"] . "\">";
-            echo "</form>";
-            echo "</div>";
-        }
+        echo "<div class=\"col-xl-4 text-center\">";
+        echo "<form action=\"index.php\" method=\"post\">";
+        echo "<img src=\"ressources/images/" . $article["image"] . "\">";
+        echo "<h2>" . $article["nom"] . "</h2>";
+        echo "<p>" . sprintf('%.2f', $article["prix"]) . " €</p>";
+        echo "<input type=\"submit\" class=\"inputOne\" name=\"ajouterPanier\" value=\"Ajouter au panier\">";
+        echo "<input type=\"hidden\" name=\"idChoosingArticle\" value=\"" . $article["id"] . "\">";
+        echo "</form>";
+        echo "<form action=\"details-produits.php\" method=\"post\">";
+        echo "<input type=\"submit\" class=\"inputTwo\" value=\"Plus de détails\">";
+        echo "<input type=\"hidden\" name=\"detailsProductId\" value=\"" . $article["id"] . "\">";
+        echo "</form>";
+        echo "</div>";
     }
+}
 
+
+// DETAILS PRODUITS ============================================================================
 // montrer un article
 function showArticle($article)
 {
@@ -54,41 +90,63 @@ function showArticle($article)
     echo "</div>";
 }
 
-// id d'articles
-function getArticleFromId($id)
+
+// CATEGORIES ================================================================================
+function getRanges()
 {
     $db = getConnection();
-    $query = $db->query('SELECT * FROM articles');
-
-    foreach ($query as $article) {
-        if ($id == $article['id']) {
-            return $article;
-        }
-    }
+    $query = $db->query('SELECT * FROM gammes');
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// ajouter au panier
-function checkCart($id)
+function articleByRanges($id)
 {
-    foreach ($_SESSION['panier'] as $article) {
-        if ($article['id'] == $id) {
-            return true;
-        }
-    }
-    return false;
+    $db = getConnection();
+    $query = $db->prepare('SELECT * FROM articles WHERE id_gammes = ?');
+    $query->execute(array($id));
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function ajoutPanier($article, $id)
+function showRanges()
 {
-    $isArticleAdded = checkCart($id);
-    if ($isArticleAdded == true) {
-        echo "<script> alert(\"Article déjà présent dans le panier !\")</script>";
-    } else {
-        $article['quantity'] = 1;
-        array_push($_SESSION['panier'], $article);
+
+    foreach (getRanges() as $gamme) {
+        echo "<div class\"row\">
+                <div class=\"col-md-12 text-center mt-5\">
+                    <h1 class=\"animate__animated animate__fadeInUp animate__delay-1s\"><b>" . $gamme['nom'] . "</b></h1>
+                </div>
+            </div>
+            
+            <div class=\"row mt-3  animate__animated animate__fadeInRight\" id=\"rangesContent\">";
+
+        foreach (articleByRanges($gamme['id']) as $article) {
+            echo "<div class=\"col-md-4 text-center mt-3\">
+                    <form action=\"categories.php\" method=\"post\">
+
+                    <img src=\"ressources/images/" . $article["image"] . "\"> <br>
+
+                    <h3 class=\"mt-2\">" . $article["nom"] . "</h3>
+
+                    <p>" . sprintf('%.2f', $article["prix"]) . " €</p>
+
+                    <input type=\"submit\" class=\"inputOne\" name=\"ajouterPanier\" value=\"Ajouter au panier\">
+                    <input type=\"hidden\" name=\"idChoosingArticle\" value=\"" . $article["id"] . "\">
+                    </form>
+
+                    <form action=\"details-produits.php\" method=\"post\">
+                    <input type=\"submit\" class=\"inputTwo\" value=\"Plus de détails\">
+                    <input type=\"hidden\" name=\"detailsProductId\" value=\"" . $article["id"] . "\">
+                    </form>
+
+                </div>";
+        }
+        echo "</div>";
     }
 }
 
+
+
+// PANIER =====================================================================================
 // montrer les articles dans le panier
 function showCart()
 {
@@ -153,7 +211,6 @@ function emptyCart()
     $_SESSION['panier'] = array();
 }
 
-
 // prix total panier
 function totalCart()
 {
@@ -164,6 +221,8 @@ function totalCart()
     return sprintf('%.2f', $total);
 }
 
+
+// CONFIRMATION =======================================================================================
 // frais de port et tva
 function shippingCost()
 {
@@ -174,7 +233,8 @@ function shippingCost()
     return $cost;
 }
 
-function tvaCost () {
+function tvaCost()
+{
     $cost = 0;
     foreach ($_SESSION['panier'] as $article) {
         $cost += $article['prix'] * (5.5 / 100);
