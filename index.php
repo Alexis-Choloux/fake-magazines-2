@@ -2,18 +2,30 @@
 
 include('functions.php');
 
+// déconnexion
+if (isset($_POST['disconnect'])) {
+  session_unset();
+}
+
 // création panier si inéxistant
 if (!isset($_SESSION['panier'])) {
   $_SESSION['panier'] = array();
 }
 
+// choix article
 if (isset($_POST['idChoosingArticle'])) {
   $id = $_POST['idChoosingArticle'];
   $chosenArticle = getArticleFromId($id);
   ajoutPanier($chosenArticle, $id);
 }
 
-if (isset($_POST['emptyCart'])) {
+// connexion utilisateur
+if (isset($_POST['signIn'])) {
+  connectUser();
+}
+
+if (isset($_POST['validatedOrder'])) {
+  createOrder();
   emptyCart();
 }
 

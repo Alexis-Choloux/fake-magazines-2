@@ -2,10 +2,11 @@
 
 include('functions.php');
 
-if (isset($_POST['emptyCart'])) {
-    emptyCart();
-}
-
+// déconnexion
+if (isset($_POST['disconnect'])) {
+    session_unset();
+  }
+ 
 ?>
 
 
@@ -116,7 +117,7 @@ if (isset($_POST['emptyCart'])) {
 
                                                     <div class="modal-footer">
                                                         <form method="post" action="index.php">
-                                                            <input type="hidden" name="emptyCart" value="true">
+                                                            <input type="hidden" name="validatedOrder" value="true">
                                                             <input type="submit" class="btn-warning" value="Retourner à l'accueil" id="return">
                                                         </form>
 

@@ -5,18 +5,7 @@ include('functions.php');
 // déconnexion
 if (isset($_POST['disconnect'])) {
     session_unset();
-  }  
-
-// création panier si inéxistant
-if (!isset($_SESSION['panier'])) {
-    $_SESSION['panier'] = array();
-}
-
-if (isset($_POST['idChoosingArticle'])) {
-    $id = $_POST['idChoosingArticle'];
-    $chosenArticle = getArticleFromId($id);
-    ajoutPanier($chosenArticle, $id);
-}
+  }
 
 ?>
 
@@ -56,18 +45,13 @@ if (isset($_POST['idChoosingArticle'])) {
 
     <main>
 
-    <div class="container mb-5" id="ranges">
-            <?php
-                showRanges(getRanges());
-            ?>
-    </div>
-
+    
 
     </main>
 
-    <?php
-    include('footer.php')
-    ?>
+<?php
+include('footer.php')
+?>
 
 </body>
 

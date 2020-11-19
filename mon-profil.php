@@ -7,13 +7,10 @@ if (isset($_POST['disconnect'])) {
     session_unset();
   }
   
-if (isset($_POST['signIn'])) {
-    connectUser();
+if (isset($_POST['modifiedAccount'])) {
+    modifiedUser();
 }
 
-if (isset($_POST['createAccount'])) {
-    checkMailPassword();
-}
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +18,7 @@ if (isset($_POST['createAccount'])) {
 
 <head>
 
-    <title>Catégories - Fake Magazines</title>
+    <title>Mon Profil - Fake Magazines</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width-device, initial-scale=1.0, maximum-scale=1.0">
@@ -53,45 +50,39 @@ if (isset($_POST['createAccount'])) {
     <main>
 
         <div class="container">
+            <div class="row">
+                <div class="col-md-4 offset-4 mt-5">
 
-            <div class="row mt-3">
-                <div class="col-md-12 text-center">
-                    <i class="fas fa-sign-in-alt fa-6x"></i>
-                    <h2>Connexion</h2>
+                    <h2 class="text-center mb-3">Mes informations personnelles</h2>
+
+                    <?php echo "
+                <p>Prénom : " . $_SESSION['firstName'] . "</p>
+                <p>Nom : " . $_SESSION['lastName'] . "</p>
+                <p>Email : " . $_SESSION['email'] . "</p>";
+                    ?>
+
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-6 offset-3" id="logInForm">
-                    <form action="index.php" method="post">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Identifiant</label>
-                            <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                            <small id="emailHelp" class="form-text text-muted">Votre email sert d'identifiant</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Mot de passe</label>
-                            <input type="password" name="password" class="form-control" id="exampleInputPassword1">
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" name="signIn" class="btn btn-warning mt-3">Connexion</button>
-                        </div>
-                    </form>
+                <div class="col-md-4 offset-4 mt-4 text-center">
+
+                    <h2 class="mb-3">Mon adresse de lirvaison/facturation</h2>
+
+                    <?php echo "
+                <p>" . $_SESSION['address'] . "</p>
+                <p>" . $_SESSION['zip'] . "</p>
+                <p>" . $_SESSION['city'] . "</p>";
+                    ?>
+
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-12 text-center">
-                    <h3>Pas encore inscrit ?</h3>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12 text-center mb-5">
-
+                <div class="col-md-12 text-center mt-3 mb-5">
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#staticBackdrop">
-                        Créer mon compte
+                        Modifier mes informations
                     </button>
 
                     <!-- Modal -->
@@ -99,7 +90,7 @@ if (isset($_POST['createAccount'])) {
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Inscription</h5>
+                                    <h5 class="modal-title" id="staticBackdropLabel">Modifier mes informations</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -107,51 +98,52 @@ if (isset($_POST['createAccount'])) {
 
 
                                 <div class="modal-body">
-                                    <form action="connexion.php" method="post">
+                                    <form action="mon-profil.php" method="post">
 
                                         <div class="form-row">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12">
                                                 <label for="inputEmail">Email</label>
-                                                <input type="email" name="email" class="form-control" id="inputEmail" required>
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="inputPassword">Mot de passe</label>
-                                                <input type="password" name="password" class="form-control" id="inputPassword" required>
-                                                <small id="passwordHelp" class="form-text text-muted">Au moins : 8 caractères / 1 majuscule, 1 minuscule, 1 chiffre</small>
+                                                <input type="email" name="email" class="form-control" id="inputEmail" <?php echo "value=\"" . $_SESSION['email'] . "\"" ?> required>
                                             </div>
                                         </div>
 
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
                                                 <label for="inputFirstName">Prénom</label>
-                                                <input type="text" name="firstName" class="form-control" id="inputFirstName" required>
+                                                <input type="text" name="firstName" class="form-control" id="inputFirstName" <?php echo "value=\"" . $_SESSION['firstName'] . "\"" ?> required>
                                             </div>
 
                                             <div class="form-group col-md-6">
                                                 <label for="inputLastName">Nom</label>
-                                                <input type="text" name="lastName" class="form-control" id="inputLastName" required>
+                                                <input type="text" name="lastName" class="form-control" id="inputLastName" <?php echo "value=\"" . $_SESSION['lastName'] . "\"" ?> required>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="inputAdresse">Adresse</label>
-                                            <input type="text" name="address" class="form-control" id="inputAdresse" required>
+                                            <input type="text" name="address" class="form-control" id="inputAdresse" <?php echo "value=\"" . $_SESSION['address'] . "\"" ?> required>
                                         </div>
 
                                         <div class="form-row">
                                             <div class="form-group col-md-9">
                                                 <label for="inputCity">Ville</label>
-                                                <input type="text" name="city" class="form-control" id="inputCity" required>
+                                                <input type="text" name="city" class="form-control" id="inputCity" <?php echo "value=\"" . $_SESSION['city'] . "\"" ?> required>
                                             </div>
 
                                             <div class="form-group col-md-3">
                                                 <label for="inputZip">Code postal</label>
-                                                <input type="text" name="zip" class="form-control" id="inputZip" required>
+                                                <input type="text" name="zip" class="form-control" id="inputZip" <?php echo "value=\"" . $_SESSION['zip'] . "\"" ?> required>
                                             </div>
                                         </div>
 
-                                        <input type="submit" class="btn btn-warning" name="createAccount" value="Créer mon compte">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12 mt-5">
+                                                <label for="exampleInputPassword1">Tapez votre mot de passe</label>
+                                                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                                            </div>
+                                        </div>
+
+                                        <input type="submit" class="btn btn-warning" name="modifiedAccount" value="Modifier">
                                     </form>
                                 </div>
 
