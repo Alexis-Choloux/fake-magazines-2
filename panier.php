@@ -69,18 +69,22 @@ if (isset($_POST['emptyCart'])) {
         <div class="row">
             <div class="col-md-12 d-flex justify-content-center mb-4">
 
-                <a href="./confirmation.php">
-                    <button type="button" class="orderBtn animate__animated animate__headShake animate__delay-1s">
+
+            <?php if ($_SESSION['panier']) {
+                echo
+                "<a href=\"./confirmation.php\">
+                    <button type=\"button\" class=\"orderBtn animate__animated animate__headShake animate__delay-1s\">
                         Confirmer panier
                     </button>
                 </a>
 
 
-                <form method="post" action="panier.php">
-                    <input type="hidden" name="emptyCart" value="true">
-                    <input type="submit" class="emptyBtn" value="Vider le panier">
-                </form>
-
+                <form method=\"post\" action=\"panier.php\">
+                    <input type=\"hidden\" name=\"emptyCart\" value=\"true\">
+                    <input type=\"submit\" class=\"emptyBtn\" value=\"Vider le panier\">
+                </form>";
+            }
+                ?>
             </div>
         </div>
 

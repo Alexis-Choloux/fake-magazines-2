@@ -5,8 +5,11 @@ include('functions.php');
 // déconnexion
 if (isset($_POST['disconnect'])) {
     session_unset();
-  }
- 
+}
+if (isset($_POST['modifiedAccount'])) {
+    modifiedUser();
+}
+
 ?>
 
 
@@ -51,9 +54,7 @@ if (isset($_POST['disconnect'])) {
             <div class="col-md-1">
                 <a href="./panier.php" id="returnBtn">
                     <button type="button" class="orderBtn animate__animated animate__fadeInLeft animate__delay-1s">
-                        < Retour vers le panier </button> </a> </div> </div> 
-                        
-                        <!-- contenu -->
+                        < Retour vers le panier </button> </a> </div> </div> <!-- contenu -->
                             <div class="container-fluid text-center" id="content">
 
                                 <div class="row">
@@ -88,47 +89,118 @@ if (isset($_POST['disconnect'])) {
                                         <p class="total"><b>TOTAL A PAYER :
                                                 <?php echo totalPurchase() . " €</b>" ?>
                                         </p>
+                                    </div>
+                                </div>
 
-                                        <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#staticBackdrop" id="confirmBtn">
-                                            Confirmer
-                                        </button>
 
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
+                                <!-- VALIDATION INFORMATIONS -->
+                                <div class="row">
+                                    <div class="col-md-6 offset-3">
 
-                                                        <h5 class="modal-title" id="staticBackdropLabel">Commande validée !</h5>
+                                        <div class="card">
+                                            <div class="card-header">
+                                                Vos informations personnelles
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"></h5>
 
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
+                                                <form action="confirmation.php" method="post">
+
+                                                    <div class="form-row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group col-md-12">
+                                                                <label for="inputEmail">Email</label>
+                                                                <input type="email" name="email" class="form-control" id="inputEmail" <?php echo "value=\"" . $_SESSION['email'] . "\"" ?> required>
+                                                            </div>
+
+                                                            <div class="form-row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="inputFirstName">Prénom</label>
+                                                                    <input type="text" name="firstName" class="form-control" id="inputFirstName" <?php echo "value=\"" . $_SESSION['firstName'] . "\"" ?> required>
+                                                                </div>
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="inputLastName">Nom</label>
+                                                                    <input type="text" name="lastName" class="form-control" id="inputLastName" <?php echo "value=\"" . $_SESSION['lastName'] . "\"" ?> required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="inputAdresse">Adresse</label>
+                                                                <input type="text" name="address" class="form-control" id="inputAdresse" <?php echo "value=\"" . $_SESSION['address'] . "\"" ?> required>
+                                                            </div>
+
+                                                            <div class="form-row">
+                                                                <div class="form-group col-md-8">
+                                                                    <label for="inputCity">Ville</label>
+                                                                    <input type="text" name="city" class="form-control" id="inputCity" <?php echo "value=\"" . $_SESSION['city'] . "\"" ?> required>
+                                                                </div>
+
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="inputZip">Code postal</label>
+                                                                    <input type="text" name="zip" class="form-control" id="inputZip" <?php echo "value=\"" . $_SESSION['zip'] . "\"" ?> required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
-                                                    <div class="modal-body">
-                                                        <?php echo
-                                                            "<p>Votre commande, d'un montant de <b>" . totalPurchase() . " €</b>, a bien été prise en compte.</p>
-                                    <p>Date de réception estimée : <b>" . date('d-m-Y', strtotime(date('d-m-Y') . ' + 3 days')) . "</b></p>
-                                    <p>Merci pour votre confiance !</p>";
-                                                        ?>
-                                                    </div>
+                                                    <div class="form-row">
+                                            <div class="form-group col-md-12 mt-2">
+                                                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                                                <small id="passwordHelp" class="form-text text-muted">Tapez votre mot de passe pour procéder aux modifications</small>
 
-                                                    <div class="modal-footer">
-                                                        <form method="post" action="index.php">
-                                                            <input type="hidden" name="validatedOrder" value="true">
-                                                            <input type="submit" class="btn-warning" value="Retourner à l'accueil" id="return">
-                                                        </form>
-
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
 
+                                        <input type="submit" class="btn btn-warning" name="modifiedAccount" value="Modifier">
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#staticBackdrop" id="confirmBtn">
+                                    Confirmer achat
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+
+                                                <h5 class="modal-title" id="staticBackdropLabel">Commande validée !</h5>
+
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <?php echo
+                                                    "<p>Votre commande, d'un montant de <b>" . totalPurchase() . " €</b>, a bien été prise en compte.</p>
+                                    <p>Date de réception estimée : <b>" . date('d-m-Y', strtotime(date('d-m-Y') . ' + 3 days')) . "</b></p>
+                                    <p>Merci pour votre confiance !</p>";
+                                                ?>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <form method="post" action="index.php">
+                                                    <input type="hidden" name="validatedOrder" value="true">
+                                                    <input type="submit" class="btn-warning" value="Retourner à l'accueil" id="return">
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
+            </div>
+        </div>
     </section>
 
     <?php

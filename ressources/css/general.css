@@ -159,6 +159,9 @@ input {
     color: white;
 }
 
+body .stockBtn {
+    width: 100%;
+}
 
 /* CATEGORIES
 ============================ */

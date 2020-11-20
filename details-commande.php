@@ -48,20 +48,25 @@ if (isset($_POST['disconnect'])) {
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
+
                     <table class="table text-center table-striped">
 
                         <thead>
                             <tr>
-                                <th scope="col">Numéro</th>
-                                <th scope="col">Date</th>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Prix</th>
+                                <th scope="col">Quantité</th>
                                 <th scope="col">Montant</th>
-                                <th scope="col"> </th>
                             </tr>
                         </thead>
 
                         <tbody>
+                            
                             <?php
-                            showUserOrders(getUserOrders());
+                            if (isset($_POST['orderId'])) {
+                                $id = $_POST['orderId'];
+                                displayOrderArticle(getOrderArticles($id));
+                            }
                             ?>
                         </tbody>
 

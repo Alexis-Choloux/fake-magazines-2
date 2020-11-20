@@ -5,10 +5,14 @@ include('functions.php');
 // déconnexion
 if (isset($_POST['disconnect'])) {
     session_unset();
-  }
-  
+}
+
 if (isset($_POST['modifiedAccount'])) {
     modifiedUser();
+}
+
+if (isset($_POST['modifiedPassword'])) {
+    checkNewPassword();
 }
 
 ?>
@@ -80,6 +84,9 @@ if (isset($_POST['modifiedAccount'])) {
 
             <div class="row">
                 <div class="col-md-12 text-center mt-3 mb-5">
+
+                    <!-- MODIFIER INFORMATIONS
+            ================================================================================================================ -->
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#staticBackdrop">
                         Modifier mes informations
@@ -143,7 +150,7 @@ if (isset($_POST['modifiedAccount'])) {
                                             </div>
                                         </div>
 
-                                        <input type="submit" class="btn btn-warning" name="modifiedAccount" value="Modifier">
+                                        <input type="submit" action="mon-profil.php" class="btn btn-warning" name="modifiedAccount" value="Modifier">
                                     </form>
                                 </div>
 
@@ -154,6 +161,55 @@ if (isset($_POST['modifiedAccount'])) {
                             </div>
                         </div>
                     </div>
+
+                    <!-- MODIFIER MOT DE PASSE 
+            ================================================================================================================ -->
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">
+                        Modifier mon mot de passe
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modifier mon mot de passe</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <form action="mon-profil.php" method="post">
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="inputPassword">Nouveau mot de passe</label>
+                                                <small id="passwordHelp" class="form-text text-muted">Au moins : 8 caractères / 1 majuscule, 1 minuscule, 1 chiffre</small>
+                                                <input type="password" name="newPassword" class="form-control" id="inputPassword" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12 mt-5">
+                                                <label for="exampleInputPassword1">Ancien mot de passe</label>
+                                                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                                            </div>
+                                        </div>
+
+                                        <input type="submit" class="btn btn-warning" name="modifiedPassword" value="Modifier">
+
+                                    </form>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

@@ -58,17 +58,19 @@ function ajoutPanier($article, $id)
 function showArticles($articles)
 {
     foreach ($articles as $article) {
-        echo "<div class=\"col-xl-4 text-center\">";
-        echo "<form action=\"index.php\" method=\"post\">";
-        echo "<img src=\"ressources/images/" . $article["image"] . "\">";
+        echo "<div class=\"col-xl-4 text-center\">
+        <form action=\"index.php\" method=\"post\">
+        <img src=\"ressources/images/" . $article["image"] . "\">";
+
+        echo showStock($article);
 
         echo "</div>";
     }
 }
 
 // montrer les stocks
-function showStock ($article) {
-    $orderQuantity = $article['quantity'];
+function showStock($article)
+{
     $articleId = $article['id'];
 
     $db = getConnection();
@@ -77,8 +79,10 @@ function showStock ($article) {
     $dbQuantity = $query->fetch();
     $dbQuantity = $dbQuantity[0];
 
-    if ($orderQuantity <= $dbQuantity) {
-        echo "<button type=\"button\" class=\"btn btn-success\">En stock <span class=\"badge badge-light\">" . $dbQuantity . "</span></button>";
+    if ($dbQuantity > 5) {
+        echo "<button type=\"button\" class=\"btn btn-success stockBtn mb-2\">
+        En stock 
+        <span class=\"badge badge-light animate__animated animate__tada animate__infinite\">" . $dbQuantity . "</span></button>";
         echo "<h2>" . $article["nom"] . "</h2>";
         echo "<p>" . sprintf('%.2f', $article["prix"]) . " €</p>";
         echo "<input type=\"submit\" class=\"inputOne\" name=\"ajouterPanier\" value=\"Ajouter au panier\">";
@@ -88,13 +92,25 @@ function showStock ($article) {
         echo "<input type=\"submit\" class=\"inputTwo\" value=\"Plus de détails\">";
         echo "<input type=\"hidden\" name=\"detailsProductId\" value=\"" . $article["id"] . "\">";
         echo "</form>";
-    }
-    elseif ($dbQuantity <= 0) {
-
-    }
-    else {
-
-        
+    } elseif ($dbQuantity == 0) {
+        echo "<button type=\"button\" class=\"btn btn-danger stockBtn mb-2\">
+        Rupture de stock 
+        <span class=\"badge badge-light\">0</span></button>";
+        echo "<h2>" . $article["nom"] . "</h2>";
+        echo "</form>";
+    } else {
+        echo "<button type=\"button\" class=\"btn btn-warning stockBtn mb-2\">
+        Presque épuisé 
+        <span class=\"badge badge-light animate__animated animate__heartBeat animate__infinite\">" . $dbQuantity . "</span></button>";
+        echo "<h2>" . $article["nom"] . "</h2>";
+        echo "<p>" . sprintf('%.2f', $article["prix"]) . " €</p>";
+        echo "<input type=\"submit\" class=\"inputOne\" name=\"ajouterPanier\" value=\"Ajouter au panier\">";
+        echo "<input type=\"hidden\" name=\"idChoosingArticle\" value=\"" . $article["id"] . "\">";
+        echo "</form>";
+        echo "<form action=\"details-produits.php\" method=\"post\">";
+        echo "<input type=\"submit\" class=\"inputTwo\" value=\"Plus de détails\">";
+        echo "<input type=\"hidden\" name=\"detailsProductId\" value=\"" . $article["id"] . "\">";
+        echo "</form>";
     }
 }
 
@@ -195,7 +211,8 @@ function showCart()
 }
 
 // contrôle des stocks
-function checkStock ($article) {
+function checkStock($article)
+{
     $orderQuantity = $article['quantity'];
     $articleId = $article['id'];
 
@@ -216,11 +233,9 @@ function checkStock ($article) {
         echo "<input type=\"submit\" class=\"inputOne displayShowCart\" value=\"Modifier quantité\">";
         echo "<input type=\"hidden\" name=\"modifiedArticleId\" value=\"" . $article["id"] . "\">";
         echo "</form>";
-    }
-    elseif ($dbQuantity <= 0) {
+    } elseif ($dbQuantity <= 0) {
         echo "<p>Ce produit est actuellement en rupture de stock</p>";
-    }
-    else {
+    } else {
         echo "<form method=\"post\" action=\"panier.php\">";
         echo "<p class=\"displayShowCart\">Quantité : ";
         echo "<input type=\"number\" class=\"text-center\" id=\"quantity\" name=\"newQuantity\" min=\"1\" max=\"" . $dbQuantity . "\" value=\"" . $article['quantity'] . "\">";
@@ -352,13 +367,14 @@ function createOrder()
 
             updateStock($article['quantity'], $article['id']);
         }
-    }else {
+    } else {
         echo "Il y a eu une erreur lors de la saisie de votre commande. Veuillez réessayer.";
     }
 }
 
 // mise à jour des stocks
-function updateStock ($orderQuantity, $articleId) {
+function updateStock($orderQuantity, $articleId)
+{
     $db = getConnection();
     $query = $db->prepare("SELECT stock FROM articles WHERE id = ?");
     $query->execute(array($articleId));
@@ -366,13 +382,12 @@ function updateStock ($orderQuantity, $articleId) {
     $dbQuantity = $result[0];
 
     $newQuantity = $dbQuantity - $orderQuantity;
-    var_dump($newQuantity);
 
     $query = $db->prepare("UPDATE articles SET stock = :newQuantity WHERE id = :articleId");
     $query->execute(array(
         "newQuantity" => $newQuantity,
         "articleId" => $articleId
-        ));
+    ));
 }
 
 
@@ -464,7 +479,6 @@ function connectUser()
         $_SESSION['zip'] = $address['code_postal'];
         $_SESSION['city'] = $address['ville'];
 
-        header('Location: mon-profil.php');
     } else {
         echo "<script> alert(\"Identifiant ou mot de passe incorrect !\")</script>";
     }
@@ -542,5 +556,111 @@ function modifiedUser()
         }
     } else {
         echo "<script> alert(\"Mot de passe incorrect !\")</script>";
+    }
+}
+
+function getUserPassword()
+{
+    $db = getConnection();
+    $query = $db->prepare('SELECT * FROM clients WHERE id = ?');
+    $query->execute(array($_SESSION['id']));
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+    return $result['mot_de_passe'];
+}
+
+// modifier mot de passe
+function modifiedPassword()
+{
+    $oldPasswordDb = getUserPassword();
+
+    if (!empty($_POST['newPassword']) && ($_POST['password'])) {
+        if (password_verify($_POST['password'], $oldPasswordDb)) {
+            $hashedNewPassword = password_hash(strip_tags($_POST['newPassword']), PASSWORD_DEFAULT);
+
+            $db = getConnection();
+            $query = $db->prepare('UPDATE clients SET mot_de_passe = :mot_de_passe WHERE id = :id');
+
+            $query->bindParam(':mot_de_passe', $hashedNewPassword, PDO::PARAM_STR);
+            $query->bindParam(':id', $_SESSION['id'], PDO::PARAM_INT);
+            $query->execute();
+
+            if ($query) {
+                echo "<script> alert(\"Mot de passe mis à jour !\")</script>";
+            } else {
+                echo "<script> alert(\"Echec lors de la mise à jour du mot de passe !\")</script>";
+            }
+        } else {
+            echo "<script> alert(\"Ancien mot de passe incorrect !\")</script>";
+        }
+    }else {
+        echo "<script> alert(\"Veuillez remplir les champs !\")</script>";
+    }
+}
+
+// verifier mdp
+function checkNewPassword()
+{
+    $password = $_POST['newPassword'];
+
+    $uppercase = preg_match('@[A-Z]@', $password);
+    $lowercase = preg_match('@[a-z]@', $password);
+    $number    = preg_match('@[0-9]@', $password);
+
+    if (!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
+        echo "<script> alert(\"Erreur : Le mot de passe doit contenir au moins 8 caractères, des majuscules, des minuscules, et des chiffres !\")</script>";
+    } else {
+        modifiedPassword();
+    }
+}
+
+
+// MES COMMANDES ==========================================================================
+function getUserOrders()
+{
+    $id = $_SESSION['id'];
+
+    $db = getConnection();
+    $query = $db->prepare('SELECT * FROM commandes WHERE id_client = ?');
+    $query->execute(array($id));
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function showUserOrders($orders)
+{
+    foreach ($orders as $order) {
+        echo "<tr>
+                    <td>" . $order['numero'] . "</td>
+                    <td>" . $order['date_commande'] . "</td>
+                    <td>" . sprintf('%.2f', $order["prix"]) . " €</td>
+                    <td>
+                    <form action=\"details-commande.php\" method=\"post\">
+                    <input type=\"submit\" class=\"btn btn-warning\" value=\"Détails\">
+                    <input type=\"hidden\" name=\"orderId\" value=\"" . $order['id'] . "\">
+                    </form>
+                    <td>
+                </tr>";
+    }
+}
+
+function getOrderArticles($id)
+{
+    $db = getConnection();
+    $query = $db->prepare('SELECT * FROM commande_articles ca INNER JOIN articles a ON a.id = ca.id_article 
+    WHERE id_commande = ?');
+    $query->execute(array($id));
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function displayOrderArticle ($orderArticles) {
+
+    foreach ($orderArticles as $article) {
+
+        echo "<tr>
+        <td class=\"table-warning\">" . $article['nom'] . "</td>
+        <td class=\"table-warning\">" . sprintf('%.2f', $article["prix"]) . " €</td>
+        <td class=\"table-warning\">" . $article['quantite'] . "</td>
+        <td class=\"table-warning\">" . sprintf('%.2f', $article['quantite'] * $article['prix']) . " €</td>
+
+    </tr>";
     }
 }
